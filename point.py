@@ -1,22 +1,45 @@
 import numpy.typing as npt
 import numpy as np
 import os as os
+import csv as csv
+
 
 class Point:
     dims: int
     # NOTE: could use generics, but it's just easier to make everything a float by default
     coords: npt.NDArray[np.float32]
+    label: str
 
-    def __init__(self, coords: npt.ArrayLike):
-        "Create a point in something that looks like a coordination system"
-        self.coords = np.array(coords, dtype = np.float32)
+    def __init__(self, coords: npt.ArrayLike, label: str | None = None):
+        "Create a point in something that looks like a coordination system. An optional label can be provided"
+        self.coords = np.array(coords, dtype=np.float32)
         self.dims = len(self.coords)
+        if label != None:
+            self.label = label
+
+    def __str__(self) -> str:
+        sb = "("
+        if self.label != None:
+            sb += f"{self.label}, "
+        for i, coord in enumerate(self.coords):
+            if i < len(self.coords) - 1:
+                sb += f"{str(coord)}, "
+            else:
+                sb += f"{str(coord)}"
+        sb += ")"
+        return sb
 
     @staticmethod
-    def points_from_csv(csv_path: os.PathLike) -> npt.NDArray:
-        "Given a csv file, convert into list of points"
+    def points_from_iris_csv(csv_path: str) -> npt.NDArray:
+        "Given a csv iris csv, convert into list of labeled points"
+        points: npt.NDArray = np.array([], dtype=Point)
         with open(csv_path, "r") as file:
-            for line in file:
-                        
-     
-    
+            csv_reader = csv.reader(file)
+            # consume header
+            _ = next(csv_reader)
+            for row in csv_reader:
+                rlen = len(row)
+                coords = [float(s) for s in row[0 : rlen - 1]]
+                p = Point(coords, label=row[rlen - 1])
+                points = np.append(points, np.array(p))
+        return points
