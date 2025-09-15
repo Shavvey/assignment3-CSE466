@@ -11,7 +11,7 @@ class VotingType(Enum):
     DISTANCE = 2
 
 def KNearestNeigbors(
-    points: npt.NDArray, dist: FunctionType, vtype: VotingType, k: int
+    points: npt.NDArray, dist: FunctionType, vtype: VotingType, k: int, reuse: bool | None = None
 ) -> npt.NDArray:
     "Given a set of points. Make predictions for the unlabeled points using kNNs"
     preds = np.array([], dtype=Point)
@@ -27,6 +27,8 @@ def KNearestNeigbors(
         distances = make_distances(pred, ldata, dist, k)
         label = make_prediction(vtype, distances)
         pred.label = label
+        if reuse == True:
+            ldata = np.append(ldata, [pred])
     return preds
 
 
