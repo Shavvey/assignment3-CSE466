@@ -1,0 +1,14 @@
+from point import Point
+from knns import KNearestNeigbors, VotingType
+from distance import Distance
+
+
+def main():
+    points = Point.points_from_iris_csv("data/iris_rnd_train.csv")
+    preds = KNearestNeigbors(points, Distance.Euclidean, VotingType.MAJORITY, 5)
+    for i, pred in enumerate(preds):
+        print(f"{i}: {pred}")
+
+
+if __name__ == "__main__":
+    main()

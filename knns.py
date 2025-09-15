@@ -3,20 +3,12 @@ from enum import Enum
 import numpy as np
 import numpy.typing as npt
 from point import Point
-from distance import Distance
 
 type PointDistance = tuple[Point, float]
 
 class VotingType(Enum):
     MAJORITY = 1
     DISTANCE = 2
-
-def main():
-    points = Point.points_from_iris_csv("data/iris_rnd_train.csv")
-    preds = KNearestNeigbors(points, Distance.Euclidean, VotingType.MAJORITY, 5)
-    for i, pred in enumerate(preds):
-        print(f"{i}: {pred}")
-
 
 def KNearestNeigbors(
     points: npt.NDArray, dist: FunctionType, vtype: VotingType, k: int
@@ -54,18 +46,30 @@ def make_prediction(vtype: VotingType, distances: list[PointDistance]) -> str:
     # map each label to voting power
     match vtype:
         case VotingType.MAJORITY:
-            vote_map: dict[str, int] = {}
+            vote_mapm: dict[str, int] = {}
             for pdist in distances:
                 label = pdist[0].label
                 if label != None:
-                    if vote_map.get(label) == None:
-                        vote_map[label] = 1
+                    if vote_mapm.get(label) == None:
+                        vote_mapm[label] = 1
                     else:
-                        vote_map[label] += 1
-            pred = sorted(vote_map, key=lambda x: x[0])[0]
-            return pred
+                        vote_mapm[label] += 1
+            preds = sorted(vote_mapm.items(), key=lambda x: x[1], reverse=True)
+            print(preds)
+            return preds[0][0]
+        case VotingType.DISTANCE:
+            vote_mapd: dict[str, float] = {}
+            for pdist in distances:
+                label = pdist[0].label
+                if label != None:
+                    if vote_mapd.get(label) == None:
+                        vote_mapd[label] = 1/pdist[1]
+                    else:
+                        vote_mapd[label] += 1/pdist[1]
+            preds = sorted(vote_mapd.items(), key=lambda x: x[1], reverse=True)
+            print(preds)
+            return preds[0][0]
+            
         case _:
             raise ValueError("[ERROR]: Voting type not implemented!")
 
-if __name__ == "__main__":
-    main()

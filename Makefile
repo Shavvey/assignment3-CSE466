@@ -1,2 +1,2 @@
 run:
-	python3 knns.py
+	python3 main.py
