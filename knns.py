@@ -50,10 +50,12 @@ def make_prediction(vtype: VotingType, distances: list[PointDistance]) -> str:
             for pdist in distances:
                 label = pdist[0].label
                 if label != None:
+                    # here voting power is simple majority, each label gets equal weighting
                     if vote_mapm.get(label) == None:
                         vote_mapm[label] = 1
                     else:
                         vote_mapm[label] += 1
+            # voting result in descending order, use label with largest voting power
             preds = sorted(vote_mapm.items(), key=lambda x: x[1], reverse=True)
             return preds[0][0]
         case VotingType.DISTANCE:
@@ -61,10 +63,12 @@ def make_prediction(vtype: VotingType, distances: list[PointDistance]) -> str:
             for pdist in distances:
                 label = pdist[0].label
                 if label != None:
+                    # here voting power is determined by inverse square of distance
                     if vote_mapd.get(label) == None:
                         vote_mapd[label] = 1/(pdist[1]**2)
                     else:
                         vote_mapd[label] += 1/(pdist[1]**2)
+            # voting result in descending order, use label with largest voting power
             preds = sorted(vote_mapd.items(), key=lambda x: x[1], reverse=True)
             return preds[0][0]
             
