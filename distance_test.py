@@ -13,3 +13,6 @@ class TestDistances(unittest.TestCase):
         x = Point((3, 5))
         y = Point((6, 8))
         self.assertEqual(Distance.manhattan(x, y), 6)
+
+if __name__ == "__main__":
+    unittest.main()
