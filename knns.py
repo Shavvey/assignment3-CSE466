@@ -36,7 +36,7 @@ def KNearestNeigbors(
 def make_distances(
     pred: Point, ldata: npt.NDArray, dist: FunctionType, k: int
 ) -> list[PointDistance]:
-    "Given a prediction point, make a list of minimum distances to `k` points the data"
+    "Given a prediction point, make a list of minimum distances to `k` points in the data"
     # find all distances to labeled points
     pdist = []
     for ld in ldata:
@@ -46,6 +46,7 @@ def make_distances(
     return pdist[0:k]
 
 def make_prediction(vtype: VotingType, distances: list[PointDistance]) -> str:
+    "From result of `k` minimum point distances, execute voting measure and return back predicted label"
     # map each label to voting power
     match vtype:
         case VotingType.MAJORITY:
