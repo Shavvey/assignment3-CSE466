@@ -6,7 +6,7 @@ from distance import Distance
 
 def main():
     points = Point.points_from_iris_csv("data/iris_rnd_train.csv")
-    preds = KNearestNeigbors(points, Distance.euclidean, VotingType.MAJORITY, 10, reuse=True)
+    preds = KNearestNeigbors(points, Distance.euclidean, VotingType.MAJORITY, 10)
     for _, pred in enumerate(preds):
         print(f"{pred.label.capitalize()}")
 

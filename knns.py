@@ -28,6 +28,7 @@ def KNearestNeigbors(
         label = make_prediction(vtype, distances)
         pred.label = label
         if reuse == True:
+            # reuse predicted point by appending to train data
             ldata = np.append(ldata, [pred])
     return preds
 
