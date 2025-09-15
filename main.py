@@ -7,7 +7,7 @@ def main():
     points = Point.points_from_iris_csv("data/iris_rnd_train.csv")
     preds = KNearestNeigbors(points, Distance.Euclidean, VotingType.MAJORITY, 5)
     for i, pred in enumerate(preds):
-        print(f"{i}: {pred}")
+        print(f"{i + 1}: {pred}")
 
 
 if __name__ == "__main__":

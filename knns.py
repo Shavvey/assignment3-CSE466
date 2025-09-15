@@ -55,7 +55,6 @@ def make_prediction(vtype: VotingType, distances: list[PointDistance]) -> str:
                     else:
                         vote_mapm[label] += 1
             preds = sorted(vote_mapm.items(), key=lambda x: x[1], reverse=True)
-            print(preds)
             return preds[0][0]
         case VotingType.DISTANCE:
             vote_mapd: dict[str, float] = {}
@@ -63,11 +62,10 @@ def make_prediction(vtype: VotingType, distances: list[PointDistance]) -> str:
                 label = pdist[0].label
                 if label != None:
                     if vote_mapd.get(label) == None:
-                        vote_mapd[label] = 1/pdist[1]
+                        vote_mapd[label] = 1/(pdist[1]**2)
                     else:
-                        vote_mapd[label] += 1/pdist[1]
+                        vote_mapd[label] += 1/(pdist[1]**2)
             preds = sorted(vote_mapd.items(), key=lambda x: x[1], reverse=True)
-            print(preds)
             return preds[0][0]
             
         case _:
