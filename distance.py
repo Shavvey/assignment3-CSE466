@@ -6,11 +6,11 @@ class Distance:
     @staticmethod
     def Euclidean(x: Point, y: Point) -> float:
         assert x.dims == y.dims
-        dist = lambda x, y: m.sqrt((x - y) ** 2)
+        dist = lambda x, y: (x - y) ** 2
         sum = 0
         for i in range(x.dims):
             sum += dist(x.coords[i], y.coords[i])
-        return sum
+        return m.sqrt(sum)
 
     @staticmethod
     def Manhattan(x: Point, y: Point) -> float:

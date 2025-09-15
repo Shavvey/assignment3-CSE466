@@ -1,7 +1,10 @@
+from types import FunctionType
 from point import Point
 from knns import KNearestNeigbors, VotingType
 from distance import Distance
 
+def test_dist(x: Point, y: Point, dist: FunctionType) -> float:
+    return dist(x,y)
 
 def main():
     points = Point.points_from_iris_csv("data/iris_rnd_train.csv")
