@@ -32,12 +32,12 @@ class TestKNearestNeighbors(unittest.TestCase):
         points.extend(pred_points)
         points = np.array(points, dtype=Point)
         skPred = [(1, 1), (9, 9), (4, 4)]
-        preds = KNearestNeigbors(points, Distance.euclidean, VotingType.MAJORITY, 1)
+        preds = KNearestNeigbors(points, Distance.euclidean, VotingType.MAJORITY, 3)
         predLabels = []
 
         for pred in preds:
             predLabels.append(pred.label)
-        knn = KNeighborsClassifier(n_neighbors=3)
+        knn = KNeighborsClassifier(n_neighbors=3, weights="uniform", metric="euclidean")
         knn.fit(skPoints, skLabels)
         skPredLabels = knn.predict(skPred)
         np.testing.assert_array_equal(skPredLabels, predLabels)
