@@ -3,7 +3,8 @@ from distance import Distance
 from knns import KNearestNeigbors, VotingType
 from point import Point
 import numpy as np
-
+from sklearn.neighbors import KNeighborsClassifier
+import random
 
 class TestKNearestNeighbors(unittest.TestCase):
     # first, test w/ k = 1
@@ -21,6 +22,26 @@ class TestKNearestNeighbors(unittest.TestCase):
             labels.append(pred.label)
         self.assertEqual(labels, ["3", "2", "1"])
 
+    def test_knn_2(self):
+        labels = ['A', 'B', 'C']
+        skPoints = [(random.randint(1, 10), random.randint(1, 10)) for _ in range(30)]
+        skLabels = [random.choice(labels) for _ in range(30)]
+        points = [Point(point, label) for point, label in zip(skPoints, skLabels)]
+
+        pred_points = [Point((1, 1)), Point((9, 9)), Point((4, 4))]
+        points.extend(pred_points)
+        points = np.array(points, dtype=Point)
+        skPred = [(1, 1), (9, 9), (4, 4)]
+        preds = KNearestNeigbors(points, Distance.euclidean, VotingType.MAJORITY, 1)
+        predLabels = []
+
+        for pred in preds:
+            predLabels.append(pred.label)
+        knn = KNeighborsClassifier(n_neighbors=3)
+        knn.fit(skPoints, skLabels)
+        skPredLabels = knn.predict(skPred)
+        np.testing.assert_array_equal(skPredLabels, predLabels)
+        
 
 if __name__ == "__main__":
     unittest.main()
