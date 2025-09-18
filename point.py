@@ -16,6 +16,11 @@ class Point:
         if label != None:
             self.label = label
 
+    def __eq__(self, other) -> bool:
+        if self.dims != other.dims:
+            return False
+        return np.array_equal(other.coords, self.coords)
+
     def __str__(self) -> str:
         sb = "("
         if self.label != None:
