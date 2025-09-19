@@ -34,7 +34,6 @@ def get_prediction(pred: Point, ldata: npt.NDArray, dist:FunctionType, vtype: Vo
     # construct distances from labeled points
     for lpoint in ldata:
         if lpoint == pred and vtype == VotingType.DISTANCE:
-            print(f"EQUAL: {pred} == {lpoint}")
             return lpoint.label
         else:
             distance = dist(lpoint, pred)
@@ -70,7 +69,6 @@ def make_prediction(vtype: VotingType, distances: list[PointDistance]) -> str:
                         vote_mapm[label] += 1
             # voting result in descending order, use label with largest voting power
             preds = sorted(vote_mapm.items(), key=lambda x: x[1], reverse=True)
-            print(preds)
             return preds[0][0]
         case VotingType.DISTANCE:
             vote_mapd: dict[str, float] = {}
@@ -79,12 +77,11 @@ def make_prediction(vtype: VotingType, distances: list[PointDistance]) -> str:
                 if label != None:
                     # here voting power is determined by inverse square of distance
                     if vote_mapd.get(label) == None:
-                        vote_mapd[label] = 1/(pdist[1]**2)
+                        vote_mapd[label] = 1/(pdist[1])
                     else:
-                        vote_mapd[label] += 1/(pdist[1]**2)
+                        vote_mapd[label] += 1/(pdist[1])
             # voting result in descending order, use label with largest voting power
             preds = sorted(vote_mapd.items(), key=lambda x: x[1], reverse=True)
-            print(preds)
             return preds[0][0]
             
         case _:

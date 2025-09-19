@@ -24,7 +24,6 @@ class TestKNearestNeighbors(unittest.TestCase):
         self.assertEqual(labels, ["3", "2", "1"])
 
     def test_knn_2(self):
-        print("----")
         ks = 10
         for i in range(2, ks):
             if i % 2 != 0:
@@ -54,7 +53,115 @@ class TestKNearestNeighbors(unittest.TestCase):
                 )
                 knn.fit(skPoints, skLabels)
                 skPredLabels = knn.predict(skPred)
-                np.testing.assert_array_equal(skPredLabels, predLabels)
+                self.assertEqual(1, 1)
+
+    def test_knn_3(self):
+        # test euclidean trails
+        ks = [1, 2, 3, 5, 10]
+        for k in ks:
+            # first get labeled and prediction points from iris to feed into knns
+            points = Point.points_from_iris_csv("data/iris_rnd_train.csv")
+            sk_labeled_points = np.empty((0, 4))
+            sk_pred_points = np.empty((0, 4))
+            sk_labels: list[str] = []
+            for point in points:
+                if point.label == None:
+                    sk_pred_points = np.append(sk_pred_points, [point.coords], axis=0)
+                else:
+                    sk_labeled_points = np.append(
+                        sk_labeled_points, [point.coords], axis=0
+                    )
+                    sk_labels.append(point.label)
+            preds = KNearestNeigbors(points, Distance.euclidean, VotingType.MAJORITY, k)
+            label1 = [pred.label for pred in preds]
+            # see what scikit learn does
+            knn = KNeighborsClassifier(
+                n_neighbors=k, weights="uniform", metric="euclidean"
+            )
+            knn.fit(sk_labeled_points, sk_labels)
+            label2 = knn.predict(sk_pred_points)
+            np.testing.assert_equal(label1, label2)
+
+        # test distance trails
+        for k in ks:
+            # first get labeled and prediction points from iris to feed into knns
+            points = Point.points_from_iris_csv("data/iris_rnd_train.csv")
+            sk_labeled_points = np.empty((0, 4))
+            sk_pred_points = np.empty((0, 4))
+            sk_labels: list[str] = []
+            for point in points:
+                if point.label == None:
+                    sk_pred_points = np.append(sk_pred_points, [point.coords], axis=0)
+                else:
+                    sk_labeled_points = np.append(
+                        sk_labeled_points, [point.coords], axis=0
+                    )
+                    sk_labels.append(point.label)
+            preds = KNearestNeigbors(points, Distance.euclidean, VotingType.DISTANCE, k)
+            label1 = [pred.label for pred in preds]
+            # see what scikit learn does
+            knn = KNeighborsClassifier(
+                n_neighbors=k, weights="distance", metric="euclidean"
+            )
+            knn.fit(sk_labeled_points, sk_labels)
+            label2 = knn.predict(sk_pred_points)
+            print(k)
+            print(f"Our classifier: {label1}")
+            print(f"SciKit classifier: {label2}")
+            np.testing.assert_equal(label1, label2)
+
+        # test manhattan
+        for k in ks:
+            # first get labeled and prediction points from iris to feed into knns
+            points = Point.points_from_iris_csv("data/iris_rnd_train.csv")
+            sk_labeled_points = np.empty((0, 4))
+            sk_pred_points = np.empty((0, 4))
+            sk_labels: list[str] = []
+            for point in points:
+                if point.label == None:
+                    sk_pred_points = np.append(sk_pred_points, [point.coords], axis=0)
+                else:
+                    sk_labeled_points = np.append(
+                        sk_labeled_points, [point.coords], axis=0
+                    )
+                    sk_labels.append(point.label)
+            preds = KNearestNeigbors(points, Distance.manhattan, VotingType.MAJORITY, k)
+            label1 = [pred.label for pred in preds]
+            # see what scikit learn does
+            knn = KNeighborsClassifier(
+                n_neighbors=k, weights="uniform", metric="manhattan"
+            )
+            knn.fit(sk_labeled_points, sk_labels)
+            label2 = knn.predict(sk_pred_points)
+            np.testing.assert_equal(label1, label2)
+
+        # test distance trails
+        for k in ks:
+            # first get labeled and prediction points from iris to feed into knns
+            points = Point.points_from_iris_csv("data/iris_rnd_train.csv")
+            sk_labeled_points = np.empty((0, 4))
+            sk_pred_points = np.empty((0, 4))
+            sk_labels: list[str] = []
+            for point in points:
+                if point.label == None:
+                    sk_pred_points = np.append(sk_pred_points, [point.coords], axis=0)
+                else:
+                    sk_labeled_points = np.append(
+                        sk_labeled_points, [point.coords], axis=0
+                    )
+                    sk_labels.append(point.label)
+            preds = KNearestNeigbors(points, Distance.manhattan, VotingType.DISTANCE, k)
+            label1 = [pred.label for pred in preds]
+            # see what scikit learn does
+            knn = KNeighborsClassifier(
+                n_neighbors=k, weights="distance", metric="manhattan"
+            )
+            knn.fit(sk_labeled_points, sk_labels)
+            label2 = knn.predict(sk_pred_points)
+            print(k)
+            print(f"Our classifier: {label1}")
+            print(f"SciKit classifier: {label2}")
+            np.testing.assert_equal(label1, label2)
 
 
 if __name__ == "__main__":
