@@ -80,6 +80,9 @@ class TestKNearestNeighbors(unittest.TestCase):
             )
             knn.fit(sk_labeled_points, sk_labels)
             label2 = knn.predict(sk_pred_points)
+            print(k)
+            print(f"Our classifier: {label1}")
+            print(f"SciKit classifier: {label2}")
             np.testing.assert_equal(label1, label2)
 
         # test distance trails
@@ -133,6 +136,9 @@ class TestKNearestNeighbors(unittest.TestCase):
             )
             knn.fit(sk_labeled_points, sk_labels)
             label2 = knn.predict(sk_pred_points)
+            print(k)
+            print(f"Our classifier: {label1}")
+            print(f"SciKit classifier: {label2}")
             np.testing.assert_equal(label1, label2)
 
         # test distance trails
