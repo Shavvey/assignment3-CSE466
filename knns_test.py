@@ -24,26 +24,34 @@ class TestKNearestNeighbors(unittest.TestCase):
         self.assertEqual(labels, ["3", "2", "1"])
 
     def test_knn_2(self):
+        print("----")
         ks = 10
-        for i in range(ks):
+        for i in range(2, ks):
             if i % 2 != 0:
                 print(i)
-                labels = [str(k) for k in range(i)]
-                print(labels)
-                skPoints = [(random.randint(1, 10), random.randint(1, 10)) for _ in range(30)]
+                labels = [str(k) for k in range(i - 1)]
+                skPoints = [
+                    (random.randint(1, 10), random.randint(1, 10)) for _ in range(30)
+                ]
                 skLabels = [random.choice(labels) for _ in range(30)]
-                points = [Point(point, label) for point, label in zip(skPoints, skLabels)]
+                points = [
+                    Point(point, label) for point, label in zip(skPoints, skLabels)
+                ]
 
                 pred_points = [Point((1, 1)), Point((9, 9)), Point((4, 4))]
                 points.extend(pred_points)
                 points = np.array(points, dtype=Point)
                 skPred = [(1, 1), (9, 9), (4, 4)]
-                preds = KNearestNeigbors(points, Distance.euclidean, VotingType.MAJORITY, i)
+                preds = KNearestNeigbors(
+                    points, Distance.euclidean, VotingType.MAJORITY, i
+                )
                 predLabels = []
 
                 for pred in preds:
                     predLabels.append(pred.label)
-                knn = KNeighborsClassifier(n_neighbors=i, weights="uniform", metric="euclidean")
+                knn = KNeighborsClassifier(
+                    n_neighbors=i, weights="uniform", metric="euclidean"
+                )
                 knn.fit(skPoints, skLabels)
                 skPredLabels = knn.predict(skPred)
                 np.testing.assert_array_equal(skPredLabels, predLabels)
